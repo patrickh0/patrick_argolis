@@ -189,6 +189,52 @@ view: order_items {
 
   }
 
+
+    # PoP
+
+    filter: date_selector {
+      type:  date
+    }
+
+    # INPUTS: using Liquid syntax, we can translate the filters into usable pieces of information
+    dimension: selector_start {
+      type: date
+      sql: {% date_start date_selector %} ;;
+      hidden: yes
+    }
+
+    dimension: selector_end {
+      type: date
+      sql: {% date_end date_selector %} ;;
+      hidden: yes
+    }
+
+    # # INPUT: Calculated here is a interval based on selected filter.
+    dimension_group: selector_interval {
+      type: duration
+      sql_start: ${selector_start} ;;
+      sql_end: ${selector_end} ;;
+      intervals: [day]
+      hidden: yes
+    }
+
+    # FILTER LOGIC: Using a CASE WHEN (LookML style) in order to use the input.
+    dimension: created_date_period_over_period {
+      case: {
+        when: {
+          sql: ${created_date} >= ${selector_start} AND ${created_date} < ${selector_end};;
+          label: "Current Period"
+        }
+
+        when: {
+          sql: ${created_date} >= ${selector_start} - ${days_selector_interval} AND ${created_date} < ${selector_end} - ${days_selector_interval} ;;
+          label: "Previous Period"
+        }
+
+        else: "Other"
+      }
+    }
+
   dimension_group: created {
     description: "Date and time the item was added to the order"
     type: time
