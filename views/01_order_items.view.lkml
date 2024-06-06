@@ -33,6 +33,11 @@ view: order_items {
     description: "Number of order items"
     type: count
     drill_fields: [detail*]
+    link: {
+      label: "Analytics Dashboard"
+      url: "/dashboards/IOlEDOPQ12RFCyuUqk38wB"
+      icon_url: "https://www.seekpng.com/png/full/138-1386046_google-analytics-integration-analytics-icon-blue-png.png"
+    }
   }
 
   measure: count_last_28d {
