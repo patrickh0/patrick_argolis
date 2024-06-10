@@ -20,14 +20,14 @@ datagroup: ecommerce_etl_modified {
 persist_with: ecommerce_etl_modified
 ############ Base Explores #############
 
-access_grant: departments {
- user_attribute: user_brand
- allowed_values: ["Executive"]
-}
+# access_grant: departments {
+# user_attribute: user_brand
+# allowed_values: ["Executive"]
+# }
 
 
 explore: order_items {
-  required_access_grants: [departments]
+  # required_access_grants: [departments]
   label: "(1) Orders, Items and Users"
   view_name: order_items
   persist_for: "1 minute"

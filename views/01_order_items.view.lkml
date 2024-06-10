@@ -240,6 +240,89 @@ view: order_items {
       }
     }
 
+      # snowflake
+
+    # filter: date_selector {
+    #   type: date
+    # }
+
+    # dimension: selector_start {
+    #   type: date
+    #   sql: {% date_start date_selector %} ;;
+    # }
+
+    # dimension: selector_end {
+    #   type: date
+    #   sql: {% date_end date_selector %} ;;
+    # }
+
+    # dimension: selector_interval {
+    #   type: duration_day
+    #   sql_start: ${selector_start} ;;
+    #   sql_end: ${selector_end} ;;
+    # }
+
+    # dimension: event_period {
+    #   type: string
+    #   case: {
+    #     when: {
+    #       label: "Current Period"
+    #       sql: ${created_date} >= ${selector_start} AND ${created_date} < ${selector_end} ;;
+    #     }
+
+    #     when: {
+    #       label: "Previous Period"
+    #       sql: ${created_date} >= DATEADD(day, -1*${selector_interval}, ${selector_start}) AND ${created_date} < DATEADD(day, -1*${selector_interval}, ${selector_end});;
+    #     }
+
+    #     else: "Other Period"
+    #   }
+    # }
+
+    # filter: date_selector {
+    #   type:  date_time
+    # }
+
+    # # INPUTS: using Liquid syntax, we can translate the filters into usable pieces of information
+    # dimension: selector_start {
+    #   type: date
+    #   sql: {% date_start date_selector %} ;;
+    #   # hidden: yes
+    # }
+
+    # dimension: selector_end {
+    #   type: date
+    #   sql: {% date_end date_selector %} ;;
+    #   # hidden: yes
+    # }
+
+    # # # INPUT: Calculated here is a interval based on selected filter.
+    # dimension_group: selector_interval {
+    #   type: duration
+    #   sql_start:${selector_start} ;;
+    #   sql_end: ${selector_end} ;;
+    #   intervals: [day]
+    #   # hidden: yes
+    # }
+
+    # # FILTER LOGIC: Using a CASE WHEN (LookML style) in order to use the input.
+    # dimension: created_date_period_over_period {
+    #   case: {
+    #     when: {
+    #       sql: ${date_date} >= ${selector_start} AND ${date_date} < ${selector_end};;
+    #       label: "Current Period"
+    #     }
+
+    #     when: {
+    #       sql: ${date_date} >= DATEADD(day, -1*${days_selector_interval}, ${selector_start}) AND ${date_date} < DATEADD(day, -1*${days_selector_interval}, ${selector_end}) ;;
+    #       label: "Previous Period"
+    #     }
+
+    #     # datetime_add('day',1,make_datetime(2017,1,1)), datetime_add('day', selector_interval
+
+    #     else: "Other"
+    #   }
+
   dimension_group: created {
     description: "Date and time the item was added to the order"
     type: time
