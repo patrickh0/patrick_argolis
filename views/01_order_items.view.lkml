@@ -12,6 +12,21 @@ view: order_items {
     value_format: "00000"
   }
 
+  parameter: brand_to_compare {
+    view_label: "Brand to Compare"
+    type: string
+    suggest_dimension: products.brand
+  }
+
+  dimension: selected_brand_comparison {
+    view_label: "Brand to Compare"
+    sql: CASE
+              WHEN ${products.brand} = {% parameter brand_to_compare %} THEN ${products.brand}
+              ELSE 'Other Brands'
+         END ;;
+  }
+
+
   dimension: inventory_item_id {
     label: "Inventory Item ID"
     description: "Identifier for the associated inventory item (hidden)"
@@ -195,9 +210,10 @@ view: order_items {
   }
 
 
-    # PoP
+    # PoP BQ
 
     filter: date_selector {
+      label: "Date Selector for Period over Period"
       type:  date
     }
 
@@ -240,6 +256,35 @@ view: order_items {
       }
     }
 
+    parameter: date_selector2 {
+      label: "Date Selector For To Date Metrics"
+      type: date
+    }
+
+    dimension: month_extract {
+      type: yesno
+      hidden: yes
+      sql: EXTRACT(MONTH FROM {% parameter date_selector2 %}) = ${created_month_num} ;;
+    }
+
+    dimension: year_extract {
+      type: yesno
+      hidden: yes
+      sql: EXTRACT(YEAR FROM {% parameter date_selector2 %}) = ${created_year} ;;
+    }
+
+    measure: MTD_test {
+      type: sum
+      sql: ${sale_price};;
+      filters: [month_extract: "Yes", year_extract: "Yes"]
+    }
+    measure: YTD_test {
+      type: sum
+      sql: ${sale_price};;
+      filters: [year_extract: "Yes"]
+    }
+
+
       # snowflake
 
     # filter: date_selector {
@@ -278,6 +323,8 @@ view: order_items {
     #     else: "Other Period"
     #   }
     # }
+
+#### Azure
 
     # filter: date_selector {
     #   type:  date_time
@@ -326,7 +373,7 @@ view: order_items {
   dimension_group: created {
     description: "Date and time the item was added to the order"
     type: time
-    timeframes: [time, hour, date, week, month, year, hour_of_day, day_of_week, month_num, raw, week_of_year,month_name]
+    timeframes: [time, hour, date, week, month, year, hour_of_day, day_of_week, day_of_month, month_num, raw, week_of_year,month_name]
     sql: ${TABLE}.created_at ;;
   }
 
