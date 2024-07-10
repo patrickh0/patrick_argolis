@@ -254,6 +254,7 @@ view: order_items {
 
         else: "Other"
       }
+      label: "Period over Period"
     }
 
     parameter: date_selector2 {
@@ -375,6 +376,7 @@ view: order_items {
     type: time
     timeframes: [time, minute15, hour, date, week, month, year, hour_of_day, day_of_week, day_of_month, month_num, raw, week_of_year,month_name]
     sql: ${TABLE}.created_at ;;
+    drill_fields: [created_minute15,created_hour,created_date]
   }
 
   dimension: reporting_period_ytd_vs_lytd {
@@ -494,7 +496,7 @@ view: order_items {
     type: sum
     value_format_name: usd
     sql: ${sale_price} ;;
-    drill_fields: [detail*]
+    drill_fields: [order_id, products.brand, products.category]
   }
 
   measure: total_gross_margin {
