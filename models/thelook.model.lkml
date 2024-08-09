@@ -1,4 +1,4 @@
-connection: "patrick_argolis_test"
+connection: "argolis_connection"
 label: " eCommerce"
 include: "/queries/queries*.view" # includes all queries refinements
 include: "/views/**/*.view" # include all the views
