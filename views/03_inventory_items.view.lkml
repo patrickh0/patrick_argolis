@@ -40,6 +40,46 @@ view: inventory_items {
     sql: ${TABLE}.sold_at ;;
   }
 
+
+  parameter: view_label {
+    type: unquoted
+    default_value: "Availability"
+  }
+
+  dimension: days_before_sold {
+    type: number
+    hidden: yes
+    sql: DATE_DIFF(CURRENT_DATE(),${sold_date},DAY) ;;
+  }
+
+
+  measure: available_today{
+    label: "Today's Availability"
+    view_label: "{% parameter view_label %}"
+    type: count
+    filters: [is_sold: "No"]
+    drill_fields: [detail*]
+  }
+
+  measure: available_yesterday{
+    label: "Availability Yesterday"
+    view_label: "{% parameter view_label %}"
+    type: sum
+    sql: CASE WHEN (${days_before_sold} <= 1 OR ${sold_date} IS NULL)
+         THEN 1 ELSE 0
+         END;;
+    drill_fields: [detail*]
+  }
+
+  measure: available_2days {
+    label: "Availability from 2 Days Ago"
+    view_label: "{% parameter view_label %}"
+    type: sum
+    sql: CASE WHEN ${days_before_sold} <= 2 OR ${sold_date} IS NULL
+         THEN 1 ELSE 0
+         END;;
+  }
+
   dimension: is_sold {
     label: "Is Sold"
     type: yesno
@@ -143,6 +183,6 @@ view: inventory_items {
   }
 
   set: detail {
-    fields: [id, products.item_name, products.category, products.brand, products.department, cost, created_time, sold_time]
+    fields: [id, products.item_name, products.category, products.brand, products.department, cost, created_time, sold_time, day_available]
   }
 }

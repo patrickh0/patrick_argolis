@@ -1,5 +1,5 @@
-connection: "argolis_connection"
-label: " eCommerce"
+connection: "looker-private-demo"
+label: " Pat_eComm"
 include: "/queries/queries*.view" # includes all queries refinements
 include: "/views/**/*.view" # include all the views
 include: "/gen_ai/**/*.view" # include all the views
@@ -20,10 +20,10 @@ datagroup: ecommerce_etl_modified {
 persist_with: ecommerce_etl_modified
 ############ Base Explores #############
 
-access_grant: departments {
-user_attribute: user_brand
-allowed_values: ["Executive"]
-}
+# access_grant: departments {
+# user_attribute: user_brand
+# allowed_values: ["Executive"]
+# }
 
 
 explore: order_items {

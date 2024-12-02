@@ -12,6 +12,34 @@ view: order_items {
     value_format: "00000"
   }
 
+  parameter: metric_selector {
+    type: string
+    allowed_value: {
+      label: "Break down by sales price"
+      value: "sales_price"
+    }
+    allowed_value: {
+      label: "Break down by gross margin"
+      value: "gross_margin"
+    }
+    allowed_value: {
+      label: "Break down by order count"
+      value: "order_count"
+    }
+  }
+
+  measure: metric_parameter {
+    type: number
+    sql:
+        CASE WHEN {% parameter metric_selector %} = 'sales_price' THEN ROUND(${total_sale_price},2)
+             WHEN {% parameter metric_selector %} = 'gross_margin' THEN ROUND(${total_gross_margin},2)
+             WHEN {% parameter metric_selector %} = 'order_count' THEN ${order_count}
+          END
+        ;;
+  }
+
+
+
   parameter: brand_to_compare {
     view_label: "Brand to Compare"
     type: string
@@ -445,6 +473,7 @@ view: order_items {
     type: average
     value_format_name: decimal_2
     sql: ${days_to_process} ;;
+    drill_fields: [detail*, days_to_process]
   }
 
   measure: average_shipping_time {
