@@ -1,4 +1,4 @@
-connection: "looker-private-demo"
+connection: "default_bigquery_connection"
 label: " Pat_eComm"
 include: "/queries/queries*.view" # includes all queries refinements
 include: "/views/**/*.view" # include all the views
